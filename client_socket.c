@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 
   memset(&server_addr, 0x00, sizeof(server_addr));
   server_addr.sin_family = AF_INET;
-  server_addr.sin_port = htons(4000);
+  server_addr.sin_port = htons(4001);
   server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
   if (connect(client_socket, (struct sockaddr *)&server_addr,
@@ -32,9 +32,15 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  write(client_socket, argv[1], strlen(argv[1]) + 1);
-  read(client_socket, buff, BUFF_SIZE);
-  printf("receive: %s\n", buff);
+  char message[255];
+  scanf("%s", message);
+
+  char buf[1024];
+  while (1) {
+    read(client_socket, buf, 1024);
+    if (strcmp(buf, "BYE") == 0) break;
+    printf("receive: %s \n", buf);
+  }
   close(client_socket);
 
   return 0;

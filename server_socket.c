@@ -63,4 +63,6 @@ int main(int argc, char **argv) {
     write(client_socket, buff_snd, strlen(buff_snd) + 1);
     close(client_socket);
   }
+
+  return 0;
 }
