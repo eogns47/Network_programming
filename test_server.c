@@ -10,8 +10,8 @@ int main(){
 	int server_socket=0;
 	int client_socket=0;
 
-	socket sockaddr_in server_addr;
-	socket sockaddr_in client_addr;
+	struct sockaddr_in server_addr;
+	struct sockaddr_in client_addr;
 
 	memset(&server_addr,0,sizeof(server_addr));
 	memset(&client_addr,0,sizeof(client_addr));
@@ -19,7 +19,7 @@ int main(){
 	server_socket=socket(PF_INET,SOCK_STREAM,0);
 
 	server_addr.sin_family = AF_INET;
-	server_addr.sin.port = htons(4000);
+	server_addr.sin_port = htons(4000);
 	server_addr.sin_addr.s_addr=htonl(INADDR_ANY);
 
 	bind(server_socket,(struct sockaddr*)&server_addr,sizeof(server_addr));
@@ -41,15 +41,15 @@ int main(){
 				break;
 			}
 			printf("buff_rcv : %s\n",buff_rcv);
-
+			int result=0;
 			if(strstr(buff_rcv,"+")!=NULL){
 				char *a=strtok(buff_rcv,"+");
-				char *b=strtok(NULL,"+");
-				int result=int(a)-48+int(b)-48;
+				char *b=strtok(NULL,"");
+				result=atoi(a)+atoi(b);
 			}
 			sprintf(buff_snd,"%d",result);
-			write(client_socket,buff_snd,1024);
-			
-
+			write(client_socket,buff_snd,strlen(buff_snd)+1);
 		}
+
+	}	
 }

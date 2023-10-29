@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
-#include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -24,7 +24,10 @@ int main(){
 	char buff_snd[1024];
 	while(1){
 		scanf("%s",buff_snd);
-		write(client_socket,buff_snd,1024);
+		write(client_socket,buff_snd,strlen(buff_snd)+1);
+		if(strcmp(buff_snd,"bye")==0){
+			break;		
+		}
 		read(client_socket,buff_rcv,1024);
 		printf("%s = %s\n",buff_snd,buff_rcv);
 	}
