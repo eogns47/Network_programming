@@ -29,16 +29,21 @@ int main(){
 
 	bind(server_socket, (struct sockaddr*)&server_addr,sizeof(server_addr));
 
-	listen(server_socket,5);
+	listen(server_socket,6);
 
-	client_socket=accept(server_socket,(struct sockaddr*)&client_addr,sizeof(client_addr));
+	int client_addr_size=sizeof(client_addr);
+	client_socket=accept(server_socket,(struct sockaddr*)&client_addr,&client_addr_size);
 
 	Tcp tcp1;
 	memset(&tcp1,0,sizeof(tcp1));
-	printf("클라이언트 연결 성공\n");
+	if(client_socket==-1){
+		printf("클라이언트연결수락실패");
+		exit(0);
+	}
+	else printf("클라이언트 연결 성공\n");
 	while(1){
-		int a=read(client_socket,&tcp1,260);
-		printf(a);
+		int a=read(client_socket,&tcp1,sizeof(tcp1));
+		printf("%d",a);
 		if(tcp1.cmd==0xff){
 			break;
 		}
@@ -54,7 +59,7 @@ int main(){
 		}
 		tcp1.cmd=0x0b;
 		tcp1.len=0;
-		write(client_socket,&tcp1,260);
+		write(client_socket,&tcp1,sizeof(tcp1));
 
 	}
 	close(client_socket);

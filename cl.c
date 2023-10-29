@@ -1,5 +1,11 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <stdlib.h>
+
 
 typedef struct tcp{
         char cmd;
@@ -11,7 +17,6 @@ int main(){
         int client_socket =0;
 
         struct sockaddr_in server_addr;
-        struct sockaddr_in client_addr;
 
         memset(&server_addr,0,sizeof(server_addr));
         server_addr.sin_family=AF_INET;
