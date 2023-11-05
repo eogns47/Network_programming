@@ -5,13 +5,14 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define PacketSize 4104
+#define PacketSize 4105
 void error_handling(char* message);
 
 typedef struct packet {
   char data[4096];  // 데이터
   int data_size;    // 데이터 사이즈
   int data_seq;     // 데이터 시컨스
+  char code;
 } Packet;
 
 int main() {
@@ -43,9 +44,10 @@ int main() {
     str_len = recvfrom(server_sock, (Packet*)&packet, PacketSize, 0,
                        (struct sockaddr*)&clnt_adr, &clnt_adr_sz);
 
-    if (packet.data[0] == 0x1A) {
+    if (packet.code == 0x1A) {
       break;
     }
+
     if (packet.data_size <= 0) {
       break;
     }

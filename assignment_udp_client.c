@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define PacketSize 4104
+#define PacketSize 4105
 #define file_name "file1.txt"
 void error_handling(char* message);
 
@@ -13,6 +13,7 @@ typedef struct packet {
   char data[4096];  // 데이터
   int data_size;    // 데이터 사이즈
   int data_seq;     // 데이터 시컨스
+  char code;
 } Packet;
 
 int main(int argc, char** argv) {
@@ -47,14 +48,15 @@ int main(int argc, char** argv) {
     if (packet.data_size <= 0) {
       break;
     }
-
-    sendto(sock, (Packet*)&packet, PacketSize, 0, (struct sockaddr*)&serv_adr,
-           sizeof(serv_adr));
+    packet.code = 0x1B;
+    sendto(sock, (Packet*)&packet, sizeof(packet), 0,
+           (struct sockaddr*)&serv_adr, sizeof(serv_adr));
 
     printf("%d byte data (seq %d) send.\n", packet.data_size, packet.data_seq);
   }
-  packet.data[0] = 0x1A;
-  sendto(sock, (Packet*)&packet, PacketSize, 0, (struct sockaddr*)&serv_adr,
+  packet.code = 0x1A;
+
+  sendto(sock, (Packet*)&packet, sizeof(packet), 0, (struct sockaddr*)&serv_adr,
          sizeof(serv_adr));
   close(sock);
   return 0;
